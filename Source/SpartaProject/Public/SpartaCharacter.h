@@ -32,11 +32,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void AddHealth(float Amount);
 
+	void FreezePlayer(int32 RequiredPressCount);
+	void UnfreezePlayer();
+
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ice")
+	bool bIsFrozen;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ice")
+	int32 CurrentEscapePressCount;
 
 
 	virtual void BeginPlay() override;
@@ -63,6 +72,9 @@ protected:
 	void StopSprint(const FInputActionValue& value);
 	UFUNCTION()
 	void Look(const FInputActionValue& value);
+	UFUNCTION()
+	void Escape(const FInputActionValue& value);
+
 
 	void OnDeath();
 	void UpdateOverheadHP();
@@ -71,4 +83,5 @@ private:
 	float NormalSpeed;
 	float SprintSpeedMultiplier;
 	float SprintSpeed;
+	int32 RequiredEscapePressCount;
 };

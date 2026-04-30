@@ -9,6 +9,7 @@
 /**
  * 
  */
+class UWidgetComponent;
 UCLASS()
 class SPARTAPROJECT_API AMineItem : public ABaseItem
 {
@@ -25,6 +26,8 @@ class SPARTAPROJECT_API AMineItem : public ABaseItem
 		UParticleSystem* ExplosionParticle;
 		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item|Effects")
 		USoundBase* ExplosionSound;
+		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+		UWidgetComponent* MineCountWidget;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		float ExplosionDelay;	
@@ -34,11 +37,15 @@ class SPARTAPROJECT_API AMineItem : public ABaseItem
 		int32 ExplosionDamage;
 
 		FTimerHandle ExplosionTimerHandle;
+		FTimerHandle MineCountTimerHandle;
+		int32 CurrentMineCount;
 		bool bHasExploded;
 
 
 		virtual void ActivateItem(AActor* Activator) override;
 		
 		void Explode();
+
+		void UpdateMineCount();
 
 };

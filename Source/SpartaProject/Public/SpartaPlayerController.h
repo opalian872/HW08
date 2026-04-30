@@ -33,6 +33,8 @@ public:
 	UInputAction* LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input");
 	UInputAction* SprintAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input");
+	UInputAction* EscapeAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI");
 	TSubclassOf<UUserWidget> HUDWidgetClass;

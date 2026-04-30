@@ -5,7 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
-
+#include "Components/WidgetComponent.h"
+#include "Components/TextBlock.h"
 
 AMineItem::AMineItem()
 {	
@@ -19,6 +20,12 @@ AMineItem::AMineItem()
 	ExplosionCollision->InitSphereRadius(300.f);
 	ExplosionCollision->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	ExplosionCollision->SetupAttachment(Scene);
+
+	MineCountWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("MineCountWidget"));
+	MineCountWidget->SetupAttachment(StaticMesh);
+	MineCountWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	MineCountWidget->SetVisibility(false);
+	CurrentMineCount = 5;
 }
 
 void AMineItem::ActivateItem(AActor* Activator)
@@ -62,6 +69,23 @@ void AMineItem::ActivateItem(AActor* Activator)
 		);
 	}
 	
+	CurrentMineCount = FMath::CeilToInt(ExplosionDelay);
+
+	if (MineCountWidget)
+	{
+		MineCountWidget->SetVisibility(true);
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(
+		MineCountTimerHandle,
+		this,
+		&AMineItem::UpdateMineCount,
+		1.0f,
+		true
+	);
+
+
+
 	GetWorld()->GetTimerManager().SetTimer(
 		ExplosionTimerHandle,
 		this,
@@ -111,7 +135,7 @@ void AMineItem::Explode()
 			);
 		}
 	}
-
+	GetWorld()->GetTimerManager().ClearTimer(MineCountTimerHandle);
 
 	DestroyItem();
 
@@ -133,4 +157,30 @@ void AMineItem::Explode()
 			false
 		);
 	}
+}
+
+void AMineItem::UpdateMineCount()
+{
+	CurrentMineCount--;
+
+	if (CurrentMineCount <= 0)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(MineCountTimerHandle);
+		return;
+	}
+
+	if (!MineCountWidget) return;
+
+	UUserWidget* UserWidget = MineCountWidget->GetUserWidgetObject();
+	if (!UserWidget) return;
+
+	UTextBlock* CountText = Cast<UTextBlock>(
+		UserWidget->GetWidgetFromName(TEXT("MineCount"))
+	);
+
+	if (!CountText) return;
+
+	CountText->SetText(
+		FText::FromString(FString::Printf(TEXT("%d..."), CurrentMineCount))
+	);
 }
