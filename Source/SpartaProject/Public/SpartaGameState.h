@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FWaveSpawnRow.h"
 #include "GameFramework/GameState.h"
 #include "SpartaGameState.generated.h"
 
@@ -32,7 +33,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
 	TArray<FName> LevelMapNames;
 
-	FTimerHandle LevelTimerHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
+	int32 WaveSpawnedCoinCount;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
+	int32 WaveCollectedCoinCount;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
+	UDataTable* WaveDataTable;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
+	int32 CurrentWaveIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
+	int32 MaxWaves;
+	UPROPERTY()
+	TArray<AActor*> CurrentWaveActors;
+
+	FTimerHandle WaveTimerHandle;
 	FTimerHandle HUDUpdateTimerHandle;
 
 	UFUNCTION(BlueprintPure, Category = "Score")
@@ -52,4 +66,8 @@ public:
 	void EndLevel();
 
 	void UpdateHUD();
+
+	void StartWave();
+	void EndWave();
+	void ClearCurrentWaveActors();
 };

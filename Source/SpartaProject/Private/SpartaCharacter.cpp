@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
+
 
 ASpartaCharacter::ASpartaCharacter()
 {
@@ -229,11 +231,19 @@ void ASpartaCharacter::UpdateOverheadHP()
 {
 	if (!OverheadWidget) return;
 
+	const float HPPercent = (MaxHealth > 0.f)
+		? FMath::Clamp(Health / MaxHealth, 0.f, 1.f)
+		: 0.f;
+
 	UUserWidget* OverheadWidgetInstance = OverheadWidget->GetUserWidgetObject();
 	if (!OverheadWidgetInstance) return;
 
 	if (UTextBlock* HPText = Cast<UTextBlock>(OverheadWidgetInstance->GetWidgetFromName(TEXT("OverHeadHP"))))
 	{
-		HPText->SetText(FText::FromString(FString::Printf(TEXT(" % .0f / % .0f"), Health, MaxHealth)));
+		HPText->SetText(FText::FromString(FString::Printf(TEXT("% .0f / % .0f"), Health, MaxHealth)));
+	}
+	if (UProgressBar* HPBar = Cast<UProgressBar>(OverheadWidgetInstance->GetWidgetFromName(TEXT("PB_HP"))))
+	{
+		HPBar->SetPercent(HPPercent);
 	}
 }

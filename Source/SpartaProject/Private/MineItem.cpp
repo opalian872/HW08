@@ -24,9 +24,43 @@ AMineItem::AMineItem()
 void AMineItem::ActivateItem(AActor* Activator)
 {
 	if (bHasExploded) return;
-	Super::ActivateItem(Activator);
-	//게임 월드의 타이머매니저
-	//타이머 핸들러
+	UParticleSystemComponent* Particle = nullptr;
+	if (PickupParticle)
+	{
+		Particle = UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			PickupParticle,
+			GetActorLocation(),
+			GetActorRotation(),
+			true
+		);
+	}
+	if (PickupSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			GetWorld(),
+			PickupSound,
+			GetActorLocation()
+		);
+	}
+	if (Particle)
+	{
+		TWeakObjectPtr<UParticleSystemComponent> WeakParticle = Particle;
+		FTimerHandle DestroyParticleTimerHandle;
+
+		GetWorld()->GetTimerManager().SetTimer(
+			DestroyParticleTimerHandle,
+			[WeakParticle]()
+			{
+				if (WeakParticle.IsValid())
+				{
+					WeakParticle->DestroyComponent();
+				}
+			},
+			ExplosionDelay-0.5f,
+			false
+		);
+	}
 	
 	GetWorld()->GetTimerManager().SetTimer(
 		ExplosionTimerHandle,
@@ -83,15 +117,19 @@ void AMineItem::Explode()
 
 	if (Particle)
 	{
+		TWeakObjectPtr<UParticleSystemComponent> WeakParticle = Particle;
 		FTimerHandle DestroyParticleTimerHandle;
 
 		GetWorld()->GetTimerManager().SetTimer(
 			DestroyParticleTimerHandle,
-			[Particle]()
+			[WeakParticle]()
 			{
-				Particle->DestroyComponent();
+				if (WeakParticle.IsValid())
+				{
+					WeakParticle->DestroyComponent();
+				}
 			},
-			2.0f,
+			2.f,
 			false
 		);
 	}
