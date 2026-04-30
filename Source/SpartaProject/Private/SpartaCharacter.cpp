@@ -211,6 +211,7 @@ void ASpartaCharacter::Escape(const FInputActionValue& value)
 	if (!bIsFrozen) return;
 	CurrentEscapePressCount++;
 
+	GEngine->AddOnScreenDebugMessage(1001, 2.f, FColor::Cyan, FString::Printf(TEXT("Player Frozen! Press F to Escape.")));
 	UE_LOG(LogTemp, Warning, TEXT("Ice Escape Count: %d / %d"), CurrentEscapePressCount, RequiredEscapePressCount);
 
 	if (CurrentEscapePressCount >= RequiredEscapePressCount)
@@ -301,7 +302,7 @@ void ASpartaCharacter::UpdateOverheadHP()
 
 	if (UTextBlock* HPText = Cast<UTextBlock>(OverheadWidgetInstance->GetWidgetFromName(TEXT("OverHeadHP"))))
 	{
-		HPText->SetText(FText::FromString(FString::Printf(TEXT("% .0f / % .0f"), Health, MaxHealth)));
+		HPText->SetText(FText::FromString(FString::Printf(TEXT("%.0f / %.0f"), Health, MaxHealth)));
 	}
 	if (UProgressBar* HPBar = Cast<UProgressBar>(OverheadWidgetInstance->GetWidgetFromName(TEXT("PB_HP"))))
 	{

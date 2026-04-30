@@ -8,7 +8,7 @@
 // Sets default values
 ASpawnVolume::ASpawnVolume()
 { 	
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	SetRootComponent(Scene);

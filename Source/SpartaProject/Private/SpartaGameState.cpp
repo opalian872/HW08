@@ -36,10 +36,6 @@ void ASpartaGameState::BeginPlay()
 		true
 	);
 }
-int32 ASpartaGameState::GetScore() const
-{
-	return Score;
-}
 
 
 void ASpartaGameState::AddScore(int32 Amount)

@@ -17,7 +17,7 @@ AMineItem::AMineItem()
 	bHasExploded = false;
 
 	ExplosionCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ExplosionCollision"));
-	ExplosionCollision->InitSphereRadius(300.f);
+	ExplosionCollision->InitSphereRadius(ExplosionRadius);
 	ExplosionCollision->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	ExplosionCollision->SetupAttachment(Scene);
 

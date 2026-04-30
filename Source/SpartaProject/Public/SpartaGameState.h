@@ -48,9 +48,7 @@ public:
 
 	FTimerHandle WaveTimerHandle;
 	FTimerHandle HUDUpdateTimerHandle;
-
-	UFUNCTION(BlueprintPure, Category = "Score")
-	int32 GetScore() const;
+	
 
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void AddScore(int32 Amount);
